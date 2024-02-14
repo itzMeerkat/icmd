@@ -1,25 +1,16 @@
-package infra
+package database
 
 import (
+	"github.com/itzmeerkat/icmd/infra/config"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"os"
-	"os/user"
 	"path/filepath"
 )
 
 var dbConn *gorm.DB
 
 func init() {
-	u, err := user.Current()
-	if err != nil {
-		panic(err)
-	}
-	folderPath := filepath.Join(u.HomeDir, ".icmd")
-	err = os.MkdirAll(folderPath, os.ModePerm)
-	if err != nil {
-		panic(err)
-	}
+	folderPath := config.GetAppFolder()
 	db, err := gorm.Open(sqlite.Open(filepath.Join(folderPath, "sqlite.db")), &gorm.Config{})
 	if err != nil {
 		panic(err)

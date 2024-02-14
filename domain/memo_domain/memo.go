@@ -1,53 +1,55 @@
 package memo_domain
 
 import (
-	"github.com/itzmeerkat/icmd/infra"
-	"gorm.io/gorm"
+	"github.com/itzmeerkat/icmd/domain/memo_domain/model"
+	"github.com/itzmeerkat/icmd/infra/database"
 )
 
-type Memo struct {
-	Content    string
-	DisplayId  uint
-	IsWishlist bool
-	IsTodo     bool
-	Status     int
-}
-
 func init() {
-	infra.MigrateType(&MemoDTO{})
+	database.MigrateType(&model.MemoDTO{})
 }
 
-func AddMemo(me Memo) {
-	dto := ToMemoDTO(me)
-	infra.CreateRecord(&dto)
+func AddMemo(me model.Memo) {
+	dto := model.ToMemoDTO(me)
+	database.CreateRecord(&dto)
 }
 
-func GetAllMemo() []Memo {
-	var memos []MemoDTO
-	infra.GetRecords(&memos, nil)
-	var res []Memo
+func GetAllMemo() []model.Memo {
+	var memos []model.MemoDTO
+	database.GetRecords(&memos, nil)
+	var res []model.Memo
 	for _, e := range memos {
-		res = append(res, FromMemoDTO(e))
+		res = append(res, model.FromMemoDTO(e))
 	}
 	return res
 }
 
-func GetAllTodo() []Memo {
-	var memos []MemoDTO
-	infra.GetRecords(&memos, MemoDTO{Memo{IsTodo: true}, gorm.Model{}})
-	var res []Memo
+func GetAllTodo() []model.Memo {
+	var memos []model.MemoDTO
+	database.GetRecords(&memos, model.MemoDTO{Memo: model.Memo{IsTodo: true}})
+	var res []model.Memo
 	for _, e := range memos {
-		res = append(res, FromMemoDTO(e))
+		res = append(res, model.FromMemoDTO(e))
 	}
 	return res
 }
 
-func GetAllWishlist() []Memo {
-	var memos []MemoDTO
-	infra.GetRecords(&memos, MemoDTO{Memo{IsWishlist: true}, gorm.Model{}})
-	var res []Memo
+func GetAllWishlist() []model.Memo {
+	var memos []model.MemoDTO
+	database.GetRecords(&memos, model.MemoDTO{Memo: model.Memo{IsWishlist: true}})
+	var res []model.Memo
 	for _, e := range memos {
-		res = append(res, FromMemoDTO(e))
+		res = append(res, model.FromMemoDTO(e))
+	}
+	return res
+}
+
+func GetAllPlain() []model.Memo {
+	var memos []model.MemoDTO
+	database.GetRecords(&memos, model.MemoDTO{Memo: model.Memo{IsWishlist: false, IsTodo: false}})
+	var res []model.Memo
+	for _, e := range memos {
+		res = append(res, model.FromMemoDTO(e))
 	}
 	return res
 }

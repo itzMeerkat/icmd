@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/itzmeerkat/icmd/domain/memo_domain"
+	"github.com/itzmeerkat/icmd/domain/memo_domain/model"
 	"github.com/jedib0t/go-pretty/v6/table"
 
 	"github.com/spf13/cobra"
@@ -17,13 +18,15 @@ var lsCmd = &cobra.Command{
 	Short: "list all memos",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		var res []memo_domain.Memo
+		var res []model.Memo
 		if isWishlist == true && isTodo == false {
 			res = memo_domain.GetAllWishlist()
 		} else if isWishlist == false && isTodo == true {
 			res = memo_domain.GetAllTodo()
+		} else if isWishlist == false && isTodo == false {
+			res = memo_domain.GetAllPlain()
 		} else {
-			res = memo_domain.GetAllMemo()
+			panic("Don't query wishlist and todo at once")
 		}
 		t := table.NewWriter()
 		for _, e := range res {

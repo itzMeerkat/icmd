@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"github.com/itzmeerkat/icmd/domain/memo_domain"
+	"github.com/itzmeerkat/icmd/domain/memo_domain/model"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -20,7 +21,7 @@ var mCmd = &cobra.Command{
 	Long:  `i m whatever content u want to input [-flags]`,
 	Run: func(cmd *cobra.Command, args []string) {
 		c := strings.Join(args, " ")
-		memo_domain.AddMemo(memo_domain.Memo{
+		memo_domain.AddMemo(model.Memo{
 			Content:    c,
 			IsWishlist: isWishlist,
 			IsTodo:     isTodo,
@@ -33,14 +34,4 @@ func init() {
 	rootCmd.AddCommand(mCmd)
 	mCmd.PersistentFlags().BoolVarP(&isTodo, "todo", "t", false, "if its a todo entry")
 	mCmd.PersistentFlags().BoolVarP(&isWishlist, "wishlist", "w", false, "if its a wishlist entry")
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// mCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// mCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

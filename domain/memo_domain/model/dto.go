@@ -1,4 +1,4 @@
-package memo_domain
+package model
 
 import (
 	"gorm.io/gorm"
